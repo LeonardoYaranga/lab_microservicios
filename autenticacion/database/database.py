@@ -1,19 +1,21 @@
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
+# Definir la URL de la base de datos directamente
+DATABASE_URL = "mysql+pymysql://root:12345@db:3306/AutenticacionDB"
 
-DATABASE_URL = f"{os.getenv('DB_DIALECT')}://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-
+# Crear el motor de la base de datos
 engine = create_engine(DATABASE_URL)
+
+# Configurar la sesión local
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Base para los modelos
 Base = declarative_base()
 
+# Crear las tablas en la base de datos
 Base.metadata.create_all(bind=engine)
-
 
 # Dependencia para obtener la sesión de la bd y cerrarla
 def get_db():
